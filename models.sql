@@ -59,3 +59,67 @@ CREATE TABLE IF NOT EXISTS roles (
     role TEXT,
     description TEXT
 );
+
+-- 1. Уникальные карточки
+CREATE TABLE IF NOT EXISTS user_cards (
+  id SERIAL PRIMARY KEY,
+  username TEXT NOT NULL,
+  card TEXT NOT NULL,
+  category TEXT,
+  zone TEXT,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 2. Мягкая терапия (предложения игроку)
+CREATE TABLE IF NOT EXISTS therapy_suggestions (
+  id SERIAL PRIMARY KEY,
+  username TEXT,
+  trauma_area TEXT,
+  suggested_method TEXT,
+  technique TEXT,
+  note TEXT,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 3. Лог событий
+CREATE TABLE IF NOT EXISTS user_events (
+  id SERIAL PRIMARY KEY,
+  username TEXT,
+  event TEXT,
+  metadata TEXT,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Список выданных карточек
+CREATE TABLE IF NOT EXISTS seen_cards (
+  user TEXT,
+  card TEXT,
+  category TEXT,
+  timestamp TEXT
+);
+
+-- Таблица травм
+CREATE TABLE IF NOT EXISTS trauma_map (
+  trauma TEXT,
+  approach TEXT,
+  technique TEXT
+);
+
+-- Автосохранённые инсайты
+CREATE TABLE IF NOT EXISTS autosaved_insights (
+  user TEXT,
+  insight TEXT,
+  zone TEXT,
+  wincoin INTEGER,
+  message TEXT,
+  timestamp TEXT
+);
+
+-- Хроника игрока
+CREATE TABLE IF NOT EXISTS user_journey (
+  user TEXT,
+  event TEXT,
+  zone TEXT,
+  detail TEXT,
+  timestamp TEXT
+);

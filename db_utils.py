@@ -175,3 +175,49 @@ def load_roles_from_json(filepath="data/logos_roles.json"):
                     VALUES (%s, %s, %s)
                 """, (row["zone"], row["role"], row["description"]))
         conn.commit()
+
+from datetime import datetime
+
+# 1. Добавить карточку в seen_cards
+def remember_card(user, card, category):
+    with get_connection() as conn:
+        with conn.cursor() as cur:
+            cur.execute(
+                "INSERT INTO seen_cards (user, card, category, timestamp) VALUES (%s, %s, %s, %s)",
+                (user, card, category, datetime.now())
+            )
+
+# 2. Получить подход по травме
+def match_therapy(trauma):
+    with get_connection() as conn:
+        with conn.cursor() as cur:
+            cur.execute("SELECT approach, technique FROM trauma_map WHERE trauma = %s", (trauma,))
+            return cur.fetchone()
+
+# 3. Автосохранение инсайта
+def auto_save_insight(user, insight, zone, wincoin, message):
+    with get_connection() as conn:
+        with conn.cursor() as cur:
+            cur.execute(
+                "INSERT INTO autosaved_insights (user, insight, zone, wincoin, message, timestamp) VALUES (%s, %s, %s, %s, %s, %s)",
+                (user, insight, zone, wincoin, message, datetime.now())
+            )
+
+# 4. Получить полную историю игрока
+def get_user_journey(user):
+    with get_connection() as conn:
+        with conn.cursor() as cur:
+            cur.execute(
+                "SELECT event, zone, detail, timestamp FROM user_journey WHERE user = %s ORDER BY timestamp",
+                (user,)
+            )
+            return cur.fetchall()
+
+# 5. Добавить событие в хронику
+def log_event(user, event, zone, detail):
+    with get_connection() as conn:
+        with conn.cursor() as cur:
+            cur.execute(
+                "INSERT INTO user_journey (user, event, zone, detail, timestamp) VALUES (%s, %s, %s, %s, %s)",
+                (user, event, zone, detail, datetime.now())
+            )

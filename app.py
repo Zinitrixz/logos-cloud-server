@@ -113,6 +113,65 @@ def generate_insight():
     reward = random.randint(1, 5)
     return jsonify({"insight": insight, "reward": reward})
 
+# 1. /rememberCard — сохранить выданную карточку
+@app.route("/rememberCard", methods=["POST"])
+def remember_card_endpoint():
+    data = request.json
+    user = data.get("user")
+    card = data.get("card")
+    category = data.get("category")
+    remember_card(user, card, category)
+    return jsonify({"status": "remembered", "card": card})
+
+# 2. /therapyMatch — подобрать подход и технику по травме
+@app.route("/therapyMatch", methods=["GET"])
+def therapy_match_endpoint():
+    trauma = request.args.get("trauma")
+    result = match_therapy(trauma)
+    if result:
+        approach, technique = result
+        return jsonify({
+            "approach": approach,
+            "technique": technique
+        })
+    return jsonify({"error": "Травма не найдена"}), 404
+
+# 3. /autoSaveInsight — автосохранение инсайта
+@app.route("/autoSaveInsight", methods=["POST"])
+def auto_save_insight_endpoint():
+    data = request.json
+    user = data.get("user")
+    insight = data.get("insight")
+    zone = data.get("zone")
+    wincoin = data.get("wincoin", 0)
+    message = data.get("message", "")
+    auto_save_insight(user, insight, zone, wincoin, message)
+    return jsonify({"status": "autosaved", "insight": insight})
+
+# 4. /getUserJourney — получить путь игрока
+@app.route("/getUserJourney", methods=["GET"])
+def get_user_journey_endpoint():
+    user = request.args.get("user")
+    history = get_user_journey(user)
+    journey = [{
+        "event": h[0],
+        "zone": h[1],
+        "detail": h[2],
+        "timestamp": h[3].strftime("%Y-%m-%d %H:%M")
+    } for h in history]
+    return jsonify({"journey": journey})
+
+# 5. /logEvent — записать событие игрока
+@app.route("/logEvent", methods=["POST"])
+def log_event_endpoint():
+    data = request.json
+    user = data.get("user")
+    event = data.get("event")
+    zone = data.get("zone")
+    detail = data.get("detail")
+    log_event(user, event, zone, detail)
+    return jsonify({"status": "event logged", "event": event})
+
 # --- ZION ---
 
 @app.route("/zion/manifest", methods=["GET"])

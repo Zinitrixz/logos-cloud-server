@@ -92,7 +92,7 @@ CREATE TABLE IF NOT EXISTS user_events (
 
 -- Список выданных карточек
 CREATE TABLE IF NOT EXISTS seen_cards (
-  user TEXT,
+  "user" TEXT,
   card TEXT,
   category TEXT,
   timestamp TEXT
@@ -107,7 +107,7 @@ CREATE TABLE IF NOT EXISTS trauma_map (
 
 -- Автосохранённые инсайты
 CREATE TABLE IF NOT EXISTS autosaved_insights (
-  user TEXT,
+  "user" TEXT,
   insight TEXT,
   zone TEXT,
   wincoin INTEGER,
@@ -117,7 +117,7 @@ CREATE TABLE IF NOT EXISTS autosaved_insights (
 
 -- Хроника игрока
 CREATE TABLE IF NOT EXISTS user_journey (
-  user TEXT,
+  "user" TEXT,
   event TEXT,
   zone TEXT,
   detail TEXT,
